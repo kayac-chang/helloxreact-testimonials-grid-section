@@ -1,3 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  font-size: 13px;
+  font-family: "Barlow Semi Condensed", sans-serif;
+}
+
+body {
+  @apply bg-blue-light-grayish;
+}
+
+.card-group li:nth-of-type(1) {
+  @apply text-white;
+  --background-color: hsla(263, 55%, 52%);
+  --border-color: hsl(264, 82%, 70%);
+}
+
+.card-group li:nth-of-type(2) {
+  @apply text-white;
+  --background-color: hsla(217, 19%, 35%);
+  --border-color: hsla(217, 19%, 35%);
+}
+
+.card-group li:nth-of-type(3) {
+  @apply text-blue-dark-blackish;
+  --background-color: white;
+  --border-color: white;
+}
+
+.card-group li:nth-of-type(4) {
+  @apply text-blue-light-grayish;
+  --background-color: hsl(219, 29%, 14%);
+  --border-color: hsl(264, 82%, 70%);
+}
+
+.card-group li:nth-of-type(5) {
+  @apply text-blue-dark-blackish;
+  --background-color: white;
+  --border-color: white;
+}

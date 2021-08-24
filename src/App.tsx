@@ -1,56 +1,104 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
-import poweredBy from './powered-by-vitawind-dark.png'
+import React, {
+  ReactNode,
+  isValidElement,
+  cloneElement,
+  useEffect,
+  useState,
+} from "react";
+import clsx from "clsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+type CardProps = {
+  children: ReactNode;
+};
+function Card({ children }: CardProps) {
+  if (!isValidElement(children)) return <></>;
 
-  return (
-    <div className="text-center">
-      <header className="bg-[#282c34] min-h-screen text-white flex flex-col justify-center items-center">
-        <img src={logo} className="h-60 motion-safe:animate-spin animate-speed" alt="logo" />
-        <style>
-          {"\
-            .animate-speed{\
-              animation-duration:20s;\
-            }\
-          "}
-        </style>
-        <p className="text-3xl font-bold">Vite + React + TypeScript + Tailwind jit!</p>
-        <p className="mt-3">
-          <button
-            type="button"
-            className="rounded text-[#282C34] bg-gray-300 px-2 py-2 my-6 hover:bg-gray-200 transition-all active:scale-95"
-            onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code className="text-[#8d96a7]">App.tsx</code> and save to test HMR updates.
-        </p>
-        <p className="mt-3 flex gap-3 text-center text-[#8d96a7]">
-          <a
-            className="text-[#61dafb] hover:text-[#a4ebff] hover:underline transition-all"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="text-[#61dafb] hover:text-[#a4ebff] hover:underline transition-all"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-        <img className="mx-auto my-8" alt="powered-by" src={poweredBy} />
-      </header>
-    </div>
-  )
+  return cloneElement(children, {
+    style: {
+      backgroundColor: "var(--background-color)",
+    },
+    className: clsx(
+      "w-full h-full min-h-[12rem] p-8 rounded-lg shadow",
+      children.props.className
+    ),
+  });
 }
 
-export default App
+type AvatarProps = {
+  image: string;
+  name: string;
+};
+function Avatar({ image, name }: AvatarProps) {
+  return (
+    <div className="flex items-center gap-4">
+      <div
+        className="w-10 rounded-full overflow-hidden border-2"
+        style={{
+          borderColor: "var(--border-color)",
+        }}
+      >
+        <img src={image} alt={`${name}'s avatar`} />
+      </div>
+
+      <div className="flex flex-col justify-center">
+        <span>{name}</span>
+
+        <span className="opacity-50 text-xs">Verified Graduate</span>
+      </div>
+    </div>
+  );
+}
+
+interface Review {
+  user: {
+    name: string;
+    avatar: string;
+  };
+  title: string;
+  content: string;
+}
+
+function App() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    fetch("/reviews.json")
+      .then((res) => res.json() as Promise<Review[]>)
+      .then(setReviews);
+  }, [setReviews]);
+
+  return (
+    <main className="min-h-screen grid place-content-center max-w-screen-xl mx-auto px-6 py-16">
+      <ul
+        className="flex flex-col lg:grid gap-6 card-group"
+        style={{
+          gridTemplateAreas: `
+            "A A B E"
+            "C D D E"
+          `,
+        }}
+      >
+        {reviews.map((review, index) => (
+          <li
+            key={review.user.name}
+            style={{ gridArea: `${String.fromCodePoint(65 + index)}` }}
+          >
+            <Card>
+              <article>
+                <header className="mb-10 flex flex-col gap-5">
+                  <Avatar image={review.user.avatar} name={review.user.name} />
+
+                  <p className="font-semibold text-xl">{review.title}</p>
+                </header>
+
+                <p className="opacity-70">“ {review.content} ”</p>
+              </article>
+            </Card>
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
+
+export default App;
