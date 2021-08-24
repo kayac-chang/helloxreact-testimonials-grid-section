@@ -69,6 +69,8 @@ function App() {
 
   return (
     <main className="min-h-screen grid place-content-center max-w-screen-xl mx-auto px-6 py-16">
+      <h1 className="sr-only">Testimonials Grid Section</h1>
+
       <ul
         className="flex flex-col lg:grid gap-6 card-group"
         style={{
@@ -88,7 +90,7 @@ function App() {
                 <header className="mb-10 flex flex-col gap-5">
                   <Avatar image={review.user.avatar} name={review.user.name} />
 
-                  <p className="font-semibold text-xl">{review.title}</p>
+                  <h2 className="font-semibold text-xl">{review.title}</h2>
                 </header>
 
                 <p className="opacity-70">“ {review.content} ”</p>
